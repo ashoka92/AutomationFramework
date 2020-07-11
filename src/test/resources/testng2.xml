@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite2">
+	<listeners>
+		<listener
+			class-name="com.qa.automation.listner.AppTestListner">
+		</listener>
+	</listeners>
+	<test name="Pixel 3a XL API 30">
+		<parameter name="platformName" value="Android"></parameter>
+		<parameter name="platformVersion" value="10"></parameter>
+		<parameter name="deviceName" value="Pixel 3a Xl API 30"></parameter>
+		<parameter name="udid" value="emulator-5554"></parameter>
+		<parameter name="systemPort" value="10001"></parameter>
+		<parameter name="chromeDriverPort" value="11001"></parameter>
+		<classes>
+			<class name="com.qa.automation.test.LoginAppTestScenerioBase" />
+		</classes>
+	</test>
+</suite> <!-- Suite -->

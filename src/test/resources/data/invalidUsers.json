@@ -1,0 +1,10 @@
+{
+	"loginCredential":{
+		"username":"invalidusername",
+		"password":"secret_sauce"
+	},
+	
+	"static_validation":{
+		"invalid_User_Password" : "Username and password do not match any user in this service."
+	}
+}

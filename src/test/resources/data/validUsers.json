@@ -1,0 +1,12 @@
+{
+	"loginCredential":{
+		"username":"standard_user",
+		"password":"secret_sauce"
+	},
+	
+	"static_validation":{
+		"invalid_User_Password" : "Username and password do not match any user in this service.",
+		"product_title" : "Sauce Labs Backpack",
+		"product_description" : "carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection."
+	}
+}
