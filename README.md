@@ -25,5 +25,6 @@ Framework implements below best practices
 - Abstraction layer for static text.
 - Supports parallel execution on multiple real Android.
 - Integrated with Extent Reporting framework (supports parallel)
+- Data provider implementation for multiple test data set.
 
 #AppiumTutorials #PageObjectModel #TestNG
