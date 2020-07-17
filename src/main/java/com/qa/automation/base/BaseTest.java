@@ -1,27 +1,40 @@
 package com.qa.automation.base;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.qa.automation.base.util.TestUtilsConstant;
+import com.qa.automation.utils.LoggerUtility;
+import com.qa.automation.utils.TestUtilsConstant;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.remote.MobileCapabilityType;
 
 public class BaseTest {
+	
 
-	protected static ThreadLocal <AppiumDriver<MobileElement>> driver = new ThreadLocal<AppiumDriver<MobileElement>>();
-	protected static ThreadLocal <Properties> props = new ThreadLocal<Properties>();
+	protected ThreadLocal <AppiumDriver<MobileElement>> driver = new ThreadLocal<AppiumDriver<MobileElement>>();
+	protected ThreadLocal <Properties> props = new ThreadLocal<Properties>();
 	protected static ThreadLocal <String> platform = new ThreadLocal<String>();
 	protected static ThreadLocal <String> dateTime = new ThreadLocal<String>();
 	protected static ThreadLocal <String> deviceName = new ThreadLocal<String>();
-
+//	public static Logger log= LogManager.getLogger(BaseTest.class.getName());
+	
+	
+	public BaseTest() {
+		
+	}
+	LoggerUtility logUtility = new LoggerUtility();
+	
 	 public AppiumDriver<MobileElement> getDriver() {
 		  return driver.get();
 	  }
@@ -62,37 +75,42 @@ public class BaseTest {
 		  deviceName.set(deviceName2);
 	  }
 
-	public void initializeDriver(String platformName, String platformVersion, String deviceName, String systemPort, String chromeDriverPort) {
+	public void initializeDriver(String platformName, String platformVersion, String deviceName, String udid, String systemPort, String chromeDriverPort) {
 		Properties props = new Properties();
 		InputStream inputStream = null;
 		AppiumDriver<MobileElement> driver = null;
 		URL url = null;
-		;
+		String strFile = "logs" + File.separator + platformName + "_" + deviceName;
+		File logFile = new File(strFile);
+		if (!logFile.exists()) {
+			logFile.mkdirs();
+		}
+		ThreadContext.put("ROUTINGKEY", strFile);
+		logUtility.log().info("log path: " + strFile);
 		try {
 			String propFileName = "config.properties";
 			inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 			props.load(inputStream);
 			setProps(props);
+			logUtility.log().info("Properties ke value {}", props.toString());
 			setPlatform(platformName);
 			setDeviceName(deviceName);;
 			DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
 			desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, deviceName);
 			desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, platformName);
 			desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, platformVersion);
-			desiredCapabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,
-					props.getProperty("androidAutomationName"));
+			desiredCapabilities.setCapability(MobileCapabilityType.UDID, udid);
+			/*
+			 * desiredCapabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,
+			 * props.getProperty(TestUtilsConstant.ANDROID_AUTOMATION_NAME));
+			 */
 			
 			  desiredCapabilities.setCapability(TestUtilsConstant.APP_PACKAGE,
-			  props.getProperty("androidAppPackage"));
-			  desiredCapabilities.setCapability(TestUtilsConstant.APP_ACTIVITY,
-			  props.getProperty("androidAppActivity"));
-			/*
-			 * desiredCapabilities.setCapability(TestUtilsConstant.APP_PACKAGE,
-			 * props.getProperty("androidAppPackageMsg"));
-			 * desiredCapabilities.setCapability(TestUtilsConstant.APP_ACTIVITY,
-			 * props.getProperty("androidAppActivityMsg"));
-			 * 
-			 */			desiredCapabilities.setCapability("systemPort", props.getProperty("systemPort"));
+					  props.getProperty(TestUtilsConstant.ANDROID_APP_PACKAGE));
+					  desiredCapabilities.setCapability(TestUtilsConstant.APP_ACTIVITY,
+					  props.getProperty(TestUtilsConstant.ANDROID_APP_ACTIVITY));
+			  
+			desiredCapabilities.setCapability("systemPort", props.getProperty("systemPort"));
 			desiredCapabilities.setCapability("chromeDriverPort", props.getProperty("chromeDriverPort"));
 			/*
 			 * String androidAppUrl =
@@ -104,12 +122,14 @@ public class BaseTest {
 			 */
 
 			url = new URL(this.props.get().getProperty(TestUtilsConstant.APPIUM_URL));
-
+			logUtility.log().info("Desired capabilitoues {}", desiredCapabilities.toJson());
 			driver = new AppiumDriver<MobileElement>(url, desiredCapabilities);
 			setDriver(driver);
 			String sessionId = driver.getSessionId().toString();
+			logUtility.log().info("Session Id {}", sessionId.toString());
 			System.out.println("Session Id " + sessionId);
 		} catch (Exception e) {
+			logUtility.log().error("Exception while loading driver device name {} exception {}",deviceName,e );
 			e.printStackTrace();
 		}
 
@@ -155,14 +175,17 @@ public class BaseTest {
 	}
 
 	public void qiutDriver() {
-		driver.get().quit();
+		logUtility.log().info("Quit Driver for device Name {}", getDeviceName());
+		this.driver.get().quit();
 	}
 
 	public void closeApp() {
-		driver.get().closeApp();
+		logUtility.log().info("Closing App for device Name {}", getDeviceName());
+		this.driver.get().closeApp();
 	}
 
 	public void launchApp() {
-		driver.get().launchApp();
+		logUtility.log().info("Launching App for device Name {}", getDeviceName());
+		this.driver.get().launchApp();
 	}
 }

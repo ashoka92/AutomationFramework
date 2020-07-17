@@ -20,11 +20,11 @@ public class LoginAppTestScenerioBase {
 	LoginPage loginPage;
 	BaseTest baseTest;
 
-	@Parameters({ "platformName", "platformVersion", "deviceName","systemPort","chromeDriverPort" })
+	@Parameters({ "platformName", "platformVersion", "deviceName", "udid", "systemPort","chromeDriverPort" })
 	@BeforeClass
-	public void beforeClass(String platformName, String platformVersion, String deviceName, String systemPort, String chromeDriverPort) throws IOException, ParseException {
+	public void beforeClass(String platformName, String platformVersion, String deviceName, String udid, String systemPort, String chromeDriverPort) throws IOException, ParseException {
 		baseTest = new BaseTest();
-		this.baseTest.initializeDriver(platformName, platformVersion, deviceName, systemPort, chromeDriverPort);
+		this.baseTest.initializeDriver(platformName, platformVersion, deviceName, udid, systemPort, chromeDriverPort);
 		this.baseTest.launchApp();
 	}
 

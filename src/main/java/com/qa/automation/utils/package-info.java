@@ -6,4 +6,4 @@
  * @version 1.0
  * 
  */
-package com.qa.automation.base.util;
+package com.qa.automation.utils;

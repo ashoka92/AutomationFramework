@@ -4,6 +4,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.qa.automation.base.BaseTest;
 import com.qa.automation.base.MenuPage;
+import com.qa.automation.utils.LoggerUtility;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
@@ -27,21 +28,22 @@ public class ProductDetailsPage {
 		this.baseTest = baseTest;
 		this.menuPage=menuPage;
 	}
+	LoggerUtility logUtility = new LoggerUtility();
 	public String getTitle() {
-		System.out.println("Product Details  page "+this.getClass()+" method name getTitle");
 		String title = baseTest.getAttributeValue(productTitleTxt, "text");
+		logUtility.log().info(" Product Page title {}", title);
 		return title;
 	}
 	
 	public String getProductDescription() {
-		System.out.println("Product Details  page "+this.getClass()+" method name getProductDescription");
 		String description = baseTest.getAttributeValue(productDesciprtion, "text");
+		logUtility.log().info(" Product Page description {}", description);
 		return description;
 	}
 	
 	public ProductsPage navigateToProductsPage() {
-		System.out.println("Product Details  page "+this.getClass()+" method name navigateToProductsPage");
 		baseTest.onClick(backToProductbtn);
+		logUtility.log().info(" navigate to ProductsPage ");
 		return new ProductsPage(baseTest, menuPage);
 	}
 }

@@ -1,4 +1,4 @@
-package com.qa.automation.base.util;
+package com.qa.automation.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 public class DataProviderUtil {
+	LoggerUtility logUtility = new LoggerUtility();
 	public String loadConfigPropertiesFile(String pageData, String configfile) {
 		String testddataFilename = null;
 		try{	
@@ -15,8 +16,9 @@ public class DataProviderUtil {
 			InputStream inputStreamConfig = getClass().getClassLoader().getResourceAsStream(configfile);
 			configProperties.load(inputStreamConfig);
 			testddataFilename=configProperties.getProperty(pageData);
+			logUtility.log().info(" Test data file name  {}", testddataFilename);
 		}catch (Exception e) {
-			e.printStackTrace();
+			logUtility.log().error(" Exception while loading properties file name  {}  {}", testddataFilename,e);
 		}
 		return testddataFilename;
 	}
@@ -28,8 +30,7 @@ public class DataProviderUtil {
 			dataProperties.load(inputStreamTestdata);
 			data = new Object[dataProperties.keySet().size()][2];
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logUtility.log().error(" Exception while loading json properties file name {}  {}", testddataFilename,e);
 		}
 		int i = 0;
 		for (String key : dataProperties.stringPropertyNames()) {
@@ -39,14 +40,13 @@ public class DataProviderUtil {
 			try (InputStream datails = getClass().getClassLoader().getResourceAsStream(dataFileName)) {
 				JSONTokener tokener = new JSONTokener(datails);
 				jsonObject = new JSONObject(tokener);
+				logUtility.log().info(" Json Object  {}", jsonObject);
 				addToObjectArray(data, i, key, jsonObject);
 			} catch (IOException e) {
-
-				e.printStackTrace();
+				logUtility.log().error(" Exception while parsing json file name  {}  {}", dataFileName,e);
 			}
 			i++;
 		}
-	
 		return data;
 	}
 

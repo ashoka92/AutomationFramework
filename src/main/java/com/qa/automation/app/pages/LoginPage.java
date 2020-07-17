@@ -4,6 +4,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.qa.automation.base.BaseTest;
 import com.qa.automation.base.MenuPage;
+import com.qa.automation.utils.LoggerUtility;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
@@ -19,7 +20,7 @@ public class LoginPage {
 	@AndroidFindBy(accessibility = "test-Password")
 	private MobileElement passwordTxtFld;
 
-	@AndroidFindBy(accessibility = "test-LOGIN")
+	@AndroidFindBy(xpath ="//android.view.ViewGroup[@content-desc=\"test-LOGIN\"]/android.widget.TextView")
 	private MobileElement loginBtn;
 	
 	//android.view.ViewGroup[@content-desc="test-Error message"]/android.widget.TextView
@@ -30,44 +31,40 @@ public class LoginPage {
 		PageFactory.initElements(new AppiumFieldDecorator(baseTest.getDriver()), this);
 		this.baseTest = baseTest;
 	}
-
+	LoggerUtility logUtility = new LoggerUtility();
 	public LoginPage enterUserName(String username) {
-		System.out.println("Login page "+this.getClass()+" method name enterUserName");
+		logUtility.log().info(" username {}", username);
 		baseTest.clearTextFeild(usernameTxtFld);
 		baseTest.sendKeys(usernameTxtFld, username);
 		return this;
 	}
 
 	public LoginPage enterPassword(String password) {
-		System.out.println("Login page "+this.getClass()+"  method name enterPassword");
+		logUtility.log().info(" password {}", password);
 		baseTest.clearTextFeild(passwordTxtFld);
 		baseTest.sendKeys(passwordTxtFld, password);
 		return this;
 	}
 
 	public ProductsPage pressLoginBtn() {
-		System.out.println("Login page "+this.getClass()+" method name pressLoginBtn");
+		logUtility.log().info(" login clicked ");
 		baseTest.onClick(loginBtn);
-		AppiumDriver<MobileElement> driver = baseTest.getDriver();
-		MobileElement findElementById = driver.findElementById("test-Username");
-		if(findElementById.isDisplayed()) {
+		
 		MenuPage menuPage= new MenuPage(baseTest);
 		return new ProductsPage(baseTest,menuPage);
-		}else {
-			return null;
-		}
 	}
 
 	public ProductsPage login(String username, String password) {
-		System.out.println("Login page "+this.getClass()+" method name login");
+		logUtility.log().info(" login username {} password {} ",username ,password);
 		enterUserName(username);
 		enterPassword(password);
 		return pressLoginBtn();
 	}
 
 	public String errorMsg() {
-		System.out.println("Login page "+this.getClass()+" method name errorMsg");
-		return baseTest.getAttributeValue(errTxt, "text");
+		String value=  baseTest.getAttributeValue(errTxt, "text");
+		logUtility.log().info(" error value {} ",value );
+		return value;
 	}
 	public Void pressLoginBtnInvalid() {
 		System.out.println("Login page "+this.getClass()+" method name pressLoginBtn");

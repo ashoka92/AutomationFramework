@@ -19,6 +19,7 @@ import com.qa.automation.app.pages.ProductsPage;
 import com.qa.automation.app.pages.SettingPage;
 import com.qa.automation.base.BaseTest;
 import com.qa.automation.base.MenuPage;
+import com.qa.automation.utils.LoggerUtility;
 
 public class ProductTest {
 	LoginPage loginPage;
@@ -26,19 +27,19 @@ public class ProductTest {
 	ProductDetailsPage productDetailsPage;
 	BaseTest baseTest;
 	JSONObject loginUsers;
-
-	@Parameters({ "platformName", "platformVersion", "deviceName", "systemPort","chromeDriverPort","testdata"})
+	LoggerUtility logUtility = new LoggerUtility();
+	@Parameters({ "platformName", "platformVersion", "deviceName","udid", "systemPort","chromeDriverPort","testdata"})
 	@BeforeClass
-	public void beforeClass(String platformName, String platformVersion, String deviceName, String systemPort, String chromeDriverPort,String testdata)
+	public void beforeClass(String platformName, String platformVersion, String deviceName,String udid, String systemPort, String chromeDriverPort,String testdata)
 			throws IOException {
 		baseTest = new BaseTest();
-		baseTest.initializeDriver(platformName, platformVersion, deviceName, systemPort,chromeDriverPort);
-		String loginData = "data/"+testdata;
-		try (InputStream datails = getClass().getClassLoader().getResourceAsStream(loginData)) {
+		baseTest.initializeDriver(platformName, platformVersion, deviceName,udid, systemPort,chromeDriverPort);
+		 String dataFileName = "data/"+testdata;
+		try (InputStream datails = getClass().getClassLoader().getResourceAsStream(dataFileName)) {
 			JSONTokener tokener = new JSONTokener(datails);
 			loginUsers = new JSONObject(tokener);
 		}
-		
+		logUtility.log().info(" Before class for device   {} ",deviceName);
 		 this.baseTest.launchApp(); 
 		 		 
 	}
@@ -55,12 +56,15 @@ public class ProductTest {
 		this.loginPage = new LoginPage(this.baseTest);
 		this.productsPage =loginPage.login(loginUsers.getJSONObject("validUser").getString("username"),
 				loginUsers.getJSONObject("validUser").getString("password"));
+		logUtility.log().info(" Before method for login user ");
+		
 	}
 	@AfterMethod
 	public void afetrMethod() {
 		MenuPage menuPage = this.productsPage.getMenuPage();
 		SettingPage pressMenuBar = menuPage.pressMenuBar();
 		this.loginPage = pressMenuBar.pressLogout();
+		logUtility.log().info(" After method for logout user ");
 	}
 
 	@Test
@@ -72,9 +76,14 @@ public class ProductTest {
 		
 		String actualPrice=this.productsPage.getSLBPrice();
 		String expectedPrice ="$29.99";
+		logUtility.log().info(" Test for Title expected {} actual {} ",expectedTile,actualTitle);
+		logUtility.log().info(" Test for price expected {} actual {} ",expectedPrice,actualPrice);
+		
 		softAssert.assertEquals(actualTitle, expectedTile);
 		softAssert.assertEquals(actualPrice, expectedPrice);
 		softAssert.assertAll();
+		
+		
 	}
 	
 	@Test
@@ -88,6 +97,8 @@ public class ProductTest {
 		String actualDescription=productDetailsPage.getProductDescription();
 		String expectedDesciption = this.loginUsers.getJSONObject("static_validation").getString("product_description");;
 		
+		logUtility.log().info(" Test for Title expected {} actual {} ",expectedTile,actualTitle);
+		logUtility.log().info(" Test for Description expected {} actual {} ",expectedDesciption,actualDescription);
 		softAssert.assertEquals(actualTitle, expectedTile);
 		softAssert.assertEquals(actualDescription, expectedDesciption);
 		

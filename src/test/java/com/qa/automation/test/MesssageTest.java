@@ -22,12 +22,12 @@ public class MesssageTest {
 	BaseTest baseTest;
 	JSONObject loginUsers;
 
-	@Parameters({ "platformName", "platformVersion", "deviceName", "systemPort","chromeDriverPort" })
+	@Parameters({ "platformName", "platformVersion", "deviceName", "udid", "systemPort","chromeDriverPort" })
 	@BeforeClass
-	public void beforeClass(String platformName, String platformVersion, String deviceName,  String systemPort, String chromeDriverPort) throws IOException {
+	public void beforeClass(String platformName, String platformVersion, String deviceName, String udid, String systemPort, String chromeDriverPort) throws IOException {
 		baseTest = new BaseTest();
 		
-		this.baseTest.initializeDriver(platformName, platformVersion, deviceName, systemPort, chromeDriverPort);
+		this.baseTest.initializeDriver(platformName, platformVersion, deviceName, udid,systemPort, chromeDriverPort);
 		/*
 		 * String dataFileName = "data/loginUsers.json"; try (InputStream datails =
 		 * getClass().getClassLoader().getResourceAsStream(dataFileName) ){ JSONTokener

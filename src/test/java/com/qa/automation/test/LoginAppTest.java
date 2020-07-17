@@ -15,25 +15,27 @@ import org.testng.annotations.Test;
 import com.qa.automation.app.pages.LoginPage;
 import com.qa.automation.app.pages.ProductsPage;
 import com.qa.automation.base.BaseTest;
+import com.qa.automation.utils.LoggerUtility;
 
 public class LoginAppTest {
 	LoginPage loginPage;
 	ProductsPage productsPage;
 	BaseTest baseTest;
 	JSONObject loginUsers;
-
-	@Parameters({ "platformName", "platformVersion", "deviceName", "udid","systemPort","chromeDriverPort", "testdata" })
+	LoggerUtility logUtility = new LoggerUtility();
+	@Parameters({ "platformName", "platformVersion", "deviceName", "udid", "systemPort", "chromeDriverPort", "testdata" })
 	@BeforeClass
-	public void beforeClass(String platformName, String platformVersion, String deviceName, String systemPort, String chromeDriverPort,String testdata) throws IOException {
-		baseTest = new BaseTest();
+	public void beforeClass(String platformName, String platformVersion, String deviceName,String udid, String systemPort, String chromeDriverPort,String testdata) throws IOException {
+	
+		this.baseTest = new BaseTest();
 		
-		this.baseTest.initializeDriver(platformName, platformVersion, deviceName, systemPort, chromeDriverPort);
+		this.baseTest.initializeDriver(platformName, platformVersion, deviceName,udid, systemPort, chromeDriverPort);
 		 String dataFileName = "data/"+testdata;
 		  try (InputStream datails = getClass().getClassLoader().getResourceAsStream(dataFileName) ){
 			  JSONTokener tokener = new JSONTokener(datails);
 			  loginUsers = new JSONObject(tokener);
 		  }
-		
+			logUtility.log().info(" Before class for device   {} ",deviceName);
 		 this.baseTest.launchApp(); 
 		 
 	}
@@ -57,7 +59,7 @@ public class LoginAppTest {
 		  
 		  String actualErrTxt = loginPage.errorMsg();
 		  String expectedErrTxt = loginUsers.getJSONObject("static_validation").getString("invalid_User_Password") ;
-		  
+		  logUtility.log().info(" Test method actual {} and expected {} ",actualErrTxt,expectedErrTxt);
 		  Assert.assertEquals(actualErrTxt, expectedErrTxt);
 	  }
 	 
@@ -69,7 +71,7 @@ public class LoginAppTest {
 		  		  
 		  String actualErrTxt = loginPage.errorMsg();
 		  String expectedErrTxt =loginUsers.getJSONObject("static_validation").getString("invalid_User_Password") ;
-		  
+		  logUtility.log().info(" Test method actual {} and expected {} ",actualErrTxt,expectedErrTxt);
 		  Assert.assertEquals(actualErrTxt, expectedErrTxt);
 	  }
 	  
@@ -81,7 +83,7 @@ public class LoginAppTest {
 		  		  
 		  String actualProductTitle = productsPage.getSLBTitle();		  
 		  String expectedProductTitle =loginUsers.getJSONObject("static_validation").getString("product_title");
-		  
+		  logUtility.log().info(" Test method actual {} and expected {} ",actualProductTitle,expectedProductTitle);
 		  Assert.assertEquals(actualProductTitle, expectedProductTitle);
 	  }
 }

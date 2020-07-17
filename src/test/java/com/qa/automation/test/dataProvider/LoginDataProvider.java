@@ -4,7 +4,7 @@ import java.util.Properties;
 
 import org.testng.annotations.DataProvider;
 
-import com.qa.automation.base.util.DataProviderUtil;
+import com.qa.automation.utils.DataProviderUtil;
 
 public class LoginDataProvider {
 	Object[][] data ;

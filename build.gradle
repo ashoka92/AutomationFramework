@@ -25,6 +25,17 @@ dependencies {
     implementation group: 'org.json', name: 'json', version: '20200518'
   
 	implementation group: 'org.apache.clerezza.ext', name: 'org.json.simple', version: '0.4'
+	
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
+	
+	// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
+	
+	// https://mvnrepository.com/artifact/com.aventstack/extentreports
+	implementation group: 'com.aventstack', name: 'extentreports', version: '4.1.2'
+	
+	
+	
     
 }
 
